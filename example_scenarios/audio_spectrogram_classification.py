@@ -37,17 +37,18 @@ def segment(x, y, n_time_bins):
     fixed number of time_bins.
     """
 
-    x_seg, y_seg = [], []
-    for xt, yt in zip(x, y):
-        n_seg = int(xt.shape[1] / n_time_bins)
-        xt = xt[:, : n_seg * n_time_bins]
-        for ii in range(n_seg):
-            x_seg.append(xt[:, ii * n_time_bins : (ii + 1) * n_time_bins])
-            y_seg.append(yt)
-    x_seg = np.array(x_seg)
-    x_seg = np.expand_dims(x_seg, -1)
-    y_seg = np.array(y_seg)
-    return x_seg, y_seg
+    return x, y
+    # x_seg, y_seg = [], []
+    # for xt, yt in zip(x, y):
+    #     n_seg = int(xt.shape[1] / n_time_bins)
+    #     xt = xt[:, : n_seg * n_time_bins]
+    #     for ii in range(n_seg):
+    #         x_seg.append(xt[:, ii * n_time_bins : (ii + 1) * n_time_bins])
+    #         y_seg.append(yt)
+    # x_seg = np.array(x_seg)
+    # x_seg = np.expand_dims(x_seg, -1)
+    # y_seg = np.array(y_seg)
+    # return x_seg, y_seg
 
 
 class AudioSpectrogramClassificationTask(Scenario):
