@@ -92,7 +92,7 @@ class AudioSpectrogramClassificationTask(Scenario):
                 if (cnt + 1) % train_data_generator.batches_per_epoch == 0:
                     # evaluate on validation examples
                     val_data_generator = load_dataset(
-                        config["dataset"],
+                        config["dataset_test"],
                         epochs=1,
                         split="validation",
                         preprocessing_fn=preprocessing_fn,
