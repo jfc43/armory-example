@@ -67,7 +67,6 @@ class AudioSpectrogramClassificationTask(Scenario):
         # Train ART classifier
         if not model_config["weights_file"]:
             # classifier.set_learning_phase(True)
-            classifier.train()
             logger.info(
                 f"Fitting model {model_config['module']}.{model_config['name']}..."
             )
@@ -109,7 +108,7 @@ class AudioSpectrogramClassificationTask(Scenario):
                     logger.info("Validation accuracy: {}".format(validation_accuracy))
 
         # classifier.set_learning_phase(False)
-        classifier.eval()
+
         # Evaluate ART classifier on test examples
         logger.info(f"Loading testing dataset {config['dataset']['name']}...")
         test_data_generator = load_dataset(
