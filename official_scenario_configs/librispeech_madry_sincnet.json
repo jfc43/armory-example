@@ -61,7 +61,7 @@
     },
     "scenario": {
         "kwargs": {},
-        "module": "armory.scenarios.audio_classification",
+        "module": "example_scenarios.audio_spectrogram_classification",
         "name": "AudioClassificationTask"
     },
     "sysconfig": {
