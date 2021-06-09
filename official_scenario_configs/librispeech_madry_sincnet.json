@@ -16,6 +16,12 @@
         "use_label": false
     },
     "dataset": {
+        "batch_size": 16,
+        "framework": "numpy",
+        "module": "armory.data.datasets",
+        "name": "librispeech_dev_clean"
+    },
+    "dataset_test": {
         "batch_size": 1,
         "framework": "numpy",
         "module": "armory.data.datasets",
@@ -70,6 +76,6 @@
         "gpus": "all",
         "output_dir": null,
         "output_filename": null,
-        "use_gpu": true
+        "use_gpu": false
     }
 }

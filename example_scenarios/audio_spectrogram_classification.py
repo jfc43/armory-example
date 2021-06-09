@@ -112,7 +112,7 @@ class AudioSpectrogramClassificationTask(Scenario):
         # Evaluate ART classifier on test examples
         logger.info(f"Loading testing dataset {config['dataset']['name']}...")
         test_data_generator = load_dataset(
-            config["dataset"],
+            config["dataset_test"],
             epochs=1,
             split="test",
             preprocessing_fn=preprocessing_fn,
