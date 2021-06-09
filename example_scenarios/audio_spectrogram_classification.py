@@ -74,7 +74,7 @@ class AudioSpectrogramClassificationTask(Scenario):
             train_data_generator = load_dataset(
                 config["dataset"],
                 epochs=fit_kwargs["nb_epochs"],
-                split_type="train",
+                split="train",
                 preprocessing_fn=preprocessing_fn,
             )
 
@@ -93,7 +93,7 @@ class AudioSpectrogramClassificationTask(Scenario):
                     val_data_generator = load_dataset(
                         config["dataset"],
                         epochs=1,
-                        split_type="validation",
+                        split="validation",
                         preprocessing_fn=preprocessing_fn,
                     )
 
@@ -114,7 +114,7 @@ class AudioSpectrogramClassificationTask(Scenario):
         test_data_generator = load_dataset(
             config["dataset"],
             epochs=1,
-            split_type="test",
+            split="test",
             preprocessing_fn=preprocessing_fn,
         )
 
@@ -138,7 +138,7 @@ class AudioSpectrogramClassificationTask(Scenario):
         test_data_generator = load_dataset(
             config["dataset"],
             epochs=1,
-            split_type="test",
+            split="test",
             preprocessing_fn=preprocessing_fn,
         )
 
