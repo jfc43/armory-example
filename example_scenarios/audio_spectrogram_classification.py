@@ -52,7 +52,7 @@ def segment(x, y, n_time_bins):
 
 class AudioSpectrogramClassificationTask(Scenario):
     def _evaluate(
-        self, config: dict, num_eval_batches: Optional[int], skip_benign: Optional[bool]
+        self, config: dict, num_eval_batches: Optional[int], skip_benign: Optional[bool], skip_attack: Optional[bool], skip_misclassified: Optional[bool],
     ) -> dict:
         """
         Evaluate a config file for classification robustness against attack.
