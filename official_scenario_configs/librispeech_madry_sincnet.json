@@ -62,7 +62,7 @@
     "scenario": {
         "kwargs": {},
         "module": "example_scenarios.audio_spectrogram_classification",
-        "name": "AudioClassificationTask"
+        "name": "AudioSpectrogramClassificationTask"
     },
     "sysconfig": {
         "docker_image": "twosixarmory/pytorch:0.13.1",
