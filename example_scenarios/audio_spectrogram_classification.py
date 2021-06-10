@@ -137,7 +137,7 @@ class AudioSpectrogramClassificationTask(Scenario):
         attack = load_attack(config["attack"], classifier)
 
         test_data_generator = load_dataset(
-            config["dataset"],
+            config["dataset_test"],
             epochs=1,
             split="test",
             preprocessing_fn=preprocessing_fn,
