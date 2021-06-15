@@ -94,7 +94,7 @@ for i in range(num_rooms):
         room.add_microphone_array(pra.MicrophoneArray(microphone, room.fs))
 
         # compute image sources
-        room.image_source_model(use_libroom=True)
+        room.image_source_model()
 
         room.compute_rir()
         rir = room.rir[0][0]
