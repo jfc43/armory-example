@@ -63,6 +63,8 @@ def create_speech_rir(audios, rir):
         ret /= np.amax(np.absolute(ret))
         ret *= 2 ** (16 - 1) - 1
         ret = np.clip(ret, a_min=-(2 ** (16 - 1)), a_max=2 ** (16 - 1) - 1)
+        ret = np.pad(ret, (0, 100000), 'constant', constant_values=(0, 0))
+        ret = ret[:s1]
 
         speech_rir.append(ret)
     speech_rirs = np.array(speech_rir)
