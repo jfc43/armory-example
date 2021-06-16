@@ -24,7 +24,7 @@ from armory.scenarios.base import Scenario
 from armory.utils.export import SampleExporter
 
 import torch
-import torch.fft 
+import numpy.fft as fft
 
 logger = logging.getLogger(__name__)
 
@@ -54,17 +54,17 @@ def create_speech_rir(audios, rir):
         shape = s1 + s2 - 1
 
         # Compute convolution in fourier space
-        sp1 = torch.fft.rfft(rir, n=shape)
-        sp2 = torch.fft.rfft(audios[i], n=shape)
+        sp1 = fft.rfft(rir, n=shape)
+        sp2 = fft.rfft(audios[i], n=shape)
 
-        ret = torch.fft.irfft(sp1 * sp2, n=shape)
+        ret = fft.irfft(sp1 * sp2, n=shape)
 
         # normalization
-        ret /= torch.max(torch.abs(ret))
+        ret /= np.amax(np.absolute(ret))
         ret *= 2 ** (16 - 1) - 1
-        ret = torch.clamp(ret, min=-(2 ** (16 - 1)), max=2 ** (16 - 1) - 1)
+        ret = np.clip(ret, a_min=-(2 ** (16 - 1)), a_max=2 ** (16 - 1) - 1)
 
-        speech_rir.append(ret.numpy())
+        speech_rir.append(ret)
     speech_rirs = np.array(speech_rir)
     return speech_rirs
 
