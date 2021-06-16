@@ -24,6 +24,7 @@ from armory.scenarios.base import Scenario
 from armory.utils.export import SampleExporter
 
 import torch
+import torch.fft 
 
 logger = logging.getLogger(__name__)
 
