@@ -71,10 +71,7 @@
         }
     },
     "scenario": {
-        "kwargs": {
-            "skip_benign": false,
-            "skip_attack": false
-        },
+        "kwargs": {},
         "module": "example_scenarios.asr_rir_defense",
         "name": "AutomaticSpeechRecognition"
     },
