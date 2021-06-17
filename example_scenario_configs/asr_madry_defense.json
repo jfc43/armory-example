@@ -82,7 +82,7 @@
     },
     "scenario": {
         "kwargs": {},
-        "module": "example_scenarios.asr_rir_defense",
+        "module": "armory.scenarios.audio_asr",
         "name": "AutomaticSpeechRecognition"
     },
     "sysconfig": {
