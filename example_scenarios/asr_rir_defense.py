@@ -198,6 +198,8 @@ class AutomaticSpeechRecognition(Scenario):
 
         predict_kwargs = config["model"].get("predict_kwargs", {})
         eval_split = config["dataset"].get("eval_split", "test_clean")
+        rir = Readrir(0)
+
         if skip_benign:
             logger.info("Skipping benign classification...")
         else:
@@ -213,6 +215,8 @@ class AutomaticSpeechRecognition(Scenario):
             logger.info("Running inference on benign examples...")
             for x, y in tqdm(test_data, desc="Benign"):
                 # Ensure that input sample isn't overwritten by estimator
+                # Apply RIR
+                x = create_speech_rir(x, rir)
                 x.flags.writeable = False
                 with metrics.resource_context(
                     name="Inference",
@@ -286,7 +290,6 @@ class AutomaticSpeechRecognition(Scenario):
                     x_adv = attack.generate(x=x)
             
             # Apply RIR
-            rir = Readrir(0)
             x_adv = create_speech_rir(x_adv, rir)
 
             # Ensure that input sample isn't overwritten by estimator
