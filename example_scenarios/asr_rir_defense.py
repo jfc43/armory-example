@@ -37,8 +37,10 @@ def Readrir(num_room):
 
     """
     index = num_room + 1000 + 1
-    _, rir = wav.read("./rir/LibriSpeech/test-clean/3575/170457/3575-170457-0013" + "_rir_" + str(index) + ".wav")
+    _, rir = wav.read(
+        "./rir/LibriSpeech/test-clean/3575/170457/3575-170457-0013" + "_rir_" + str(index) + ".wav")
     return rir
+
 
 def create_speech_rir(audios, rir):
     """
@@ -83,7 +85,8 @@ def load_audio_channel(delay, attenuation, pytorch=True):
     delay = int(delay)
     attenuation = float(attenuation)
     if delay < 0:
-        raise ValueError(f"delay {delay} must be a nonnegative number (of samples)")
+        raise ValueError(
+            f"delay {delay} must be a nonnegative number (of samples)")
     if delay == 0 or attenuation == 0:
         logger.warning("Using an identity channel")
         numerator_coef = np.array([1.0])
@@ -106,10 +109,42 @@ def load_audio_channel(delay, attenuation, pytorch=True):
                 numerator_coef=numerator_coef, denominator_coef=denominator_coef
             )
         except ImportError:
-            logger.exception("PyTorch not available. Resorting to scipy filter")
+            logger.exception(
+                "PyTorch not available. Resorting to scipy filter")
 
-    logger.warning("Scipy LFilter does not currently implement proper gradients")
+    logger.warning(
+        "Scipy LFilter does not currently implement proper gradients")
     return LFilter(numerator_coef=numerator_coef, denominator_coef=denominator_coef)
+
+
+def to_wav(signal, fs, filename, norm=False, bitdepth=np.float):
+    """
+    Save the signal to a wav files.
+    """
+    from scipy.io import wavfile
+    # if mono is True:
+    #     signal = self.signals[self.M // 2]
+    # else:
+    #     signal = self.signals.T  # each column is a channel
+    float_types = [float, np.float, np.float32, np.float64]
+    if bitdepth in float_types:
+        bits = None
+    elif bitdepth is np.int8:
+        bits = 8
+    elif bitdepth is np.int16:
+        bits = 16
+    elif bitdepth is np.int32:
+        bits = 32
+    elif bitdepth is np.int64:
+        bits = 64
+    else:
+        raise NameError("No such type.")
+
+    if norm:
+        signal = normalize(signal, bits=bits)
+    signal = np.array(signal, dtype=bitdepth)
+    breakpoint()
+    wavfile.write(filename, fs, signal)
 
 
 class AutomaticSpeechRecognition(Scenario):
@@ -125,7 +160,8 @@ class AutomaticSpeechRecognition(Scenario):
         Evaluate the config and return a results dict
         """
         if skip_misclassified:
-            raise ValueError("skip_misclassified shouldn't be set for ASR scenario")
+            raise ValueError(
+                "skip_misclassified shouldn't be set for ASR scenario")
         model_config = config["model"]
         estimator, fit_preprocessing_fn = load_model(model_config)
 
@@ -146,7 +182,8 @@ class AutomaticSpeechRecognition(Scenario):
         defense_type = defense_config.get("type")
 
         if defense_type in ["Preprocessor", "Postprocessor"]:
-            logger.info(f"Applying internal {defense_type} defense to estimator")
+            logger.info(
+                f"Applying internal {defense_type} defense to estimator")
             estimator = load_defense_internal(config["defense"], estimator)
 
         if model_config["fit"]:
@@ -155,7 +192,8 @@ class AutomaticSpeechRecognition(Scenario):
             )
             fit_kwargs = model_config["fit_kwargs"]
 
-            logger.info(f"Loading train dataset {config['dataset']['name']}...")
+            logger.info(
+                f"Loading train dataset {config['dataset']['name']}...")
             batch_size = config["dataset"].pop("batch_size")
             config["dataset"]["batch_size"] = fit_kwargs.get(
                 "fit_batch_size", batch_size
@@ -178,7 +216,8 @@ class AutomaticSpeechRecognition(Scenario):
 
         if defense_type == "Transform":
             # NOTE: Transform currently not supported
-            logger.info(f"Transforming estimator with {defense_type} defense...")
+            logger.info(
+                f"Transforming estimator with {defense_type} defense...")
             defense = load_defense_wrapper(config["defense"], estimator)
             estimator = defense()
 
@@ -217,6 +256,9 @@ class AutomaticSpeechRecognition(Scenario):
                 # Ensure that input sample isn't overwritten by estimator
                 # Apply RIR
                 x = create_speech_rir(x, rir)
+                to_wav(x[0], 16000, "/workspace/test.wav")
+                breakpoint()
+
                 x.flags.writeable = False
                 with metrics.resource_context(
                     name="Inference",
@@ -261,7 +303,8 @@ class AutomaticSpeechRecognition(Scenario):
                 shuffle_files=False,
             )
             if targeted:
-                label_targeter = load_label_targeter(attack_config["targeted_labels"])
+                label_targeter = load_label_targeter(
+                    attack_config["targeted_labels"])
 
         export_samples = config["scenario"].get("export_samples")
         if export_samples is not None and export_samples > 0:
@@ -288,9 +331,11 @@ class AutomaticSpeechRecognition(Scenario):
                     x_adv = attack.generate(x=x, y=y_target)
                 else:
                     x_adv = attack.generate(x=x)
-            
+
             # Apply RIR
             x_adv = create_speech_rir(x_adv, rir)
+            to_wav(x_adv, 16000, "~/test.wav")
+            # break
 
             # Ensure that input sample isn't overwritten by estimator
             x_adv.flags.writeable = False

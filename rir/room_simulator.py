@@ -42,6 +42,8 @@ name_sub, _ = name.split(".")
 
 # read one audio
 fs, signal = wavfile.read(name)
+print(f"input: {name}")
+# breakpoint()
 
 temp = 0
 room_settings = []
@@ -85,22 +87,29 @@ for i in range(num_rooms):
         max_order = 100
 
         # set max_order to a low value for a quick (but less accurate) RIR
-        room = pra.ShoeBox(room_dim, fs=fs, max_order=max_order, absorption=0.2)
+        room = pra.ShoeBox(
+            room_dim, fs=fs, max_order=max_order, absorption=0.2)
 
         # add source and set the signal to WAV file content
         room.add_source(source, signal=signal)
 
         # add two-microphone array
-        room.add_microphone_array(pra.MicrophoneArray(microphone, room.fs))
+        room.add_microphone_array(pra.MicrophoneArray(microphone, fs))
 
         # compute image sources
         room.image_source_model()
 
         room.compute_rir()
+        breakpoint
         rir = room.rir[0][0]
 
+        normalized = normalize(rir)
+
         # save the room reverberations
-        wavfile.write(name_sub + "_rir_" + str(temp) + ".wav", 16000, rir)
+        out_path = name_sub + "_rir_" + str(temp) + ".wav"
+        print(f"output: {out_path}")
+        wavfile.write(out_path, fs, rir)
+        breakpoint()
 
 with open("room_setting.data", "wb") as f:
     pickle.dump(room_settings, f)
